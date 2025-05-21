@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "120474864431",
+    "project_id": "po-pal",
+    "storage_bucket": "po-pal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120474864431:android:b8fcafed0c5cd90215afda",
+        "android_client_info": {
+          "package_name": "com.example.po_pal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDmCzEFdgNNCAeZ7goXQIEHWdVApdFce0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
