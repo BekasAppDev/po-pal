@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:po_pal/views/settings_view.dart';
+import 'package:po_pal/views/testing_view.dart';
 
 class TrackingView extends StatefulWidget {
   const TrackingView({super.key});
@@ -43,7 +44,7 @@ class _TrackingViewState extends State<TrackingView> {
           ),
         ],
       ),
-      body: Scaffold(),
+      body: TestingBody(currentUserId: 'crv6myqvbHhrrJXRAz0Y0Ldkb1A3'),
     );
   }
 }
