@@ -70,6 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
                   autofocus: true,
                   decoration: const InputDecoration(hintText: 'Enter email'),
                 ),
+                const SizedBox(height: 10),
                 TextField(
                   controller: _password,
                   obscureText: true,

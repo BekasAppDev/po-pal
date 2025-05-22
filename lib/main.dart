@@ -4,6 +4,7 @@ import 'package:po_pal/services/auth/bloc/auth_bloc.dart';
 import 'package:po_pal/services/auth/bloc/auth_events.dart';
 import 'package:po_pal/services/auth/bloc/auth_states.dart';
 import 'package:po_pal/services/auth/firebase_auth_provider.dart';
+import 'package:po_pal/theme/light_theme.dart';
 import 'package:po_pal/utilities/loading/loading_screen.dart';
 import 'package:po_pal/views/forgot_password_view.dart';
 import 'package:po_pal/views/login_view.dart';
@@ -20,38 +21,7 @@ void main() {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'PO Pal',
-        theme: ThemeData(
-          fontFamily: 'Ubuntu',
-          colorScheme: const ColorScheme(
-            brightness: Brightness.light,
-            primary: Colors.black,
-            onPrimary: Colors.white,
-            secondary: Colors.black,
-            onSecondary: Colors.white,
-            error: Colors.black,
-            onError: Colors.white,
-            surface: Colors.white,
-            onSurface: Colors.black,
-          ),
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.black,
-            iconTheme: IconThemeData(color: Colors.white),
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Ubuntu',
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          textTheme: const TextTheme(
-            titleLarge: TextStyle(color: Colors.white),
-            titleMedium: TextStyle(color: Colors.white),
-            bodyLarge: TextStyle(color: Colors.black),
-            bodyMedium: TextStyle(color: Colors.black),
-            bodySmall: TextStyle(color: Colors.black),
-          ),
-        ),
+        theme: lightTheme(),
         home: const HomePage(),
         routes: {},
       ),
