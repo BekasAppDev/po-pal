@@ -40,6 +40,8 @@ dependencies:
   firebase_auth: ^5.5.3
   flutter_bloc: ^9.1.1
   equatable: ^2.0.7
+  string_validator: ^1.1.0
+  fl_chart: ^1.0.0
 
 dev_dependencies:
   flutter_test:

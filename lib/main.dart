@@ -8,8 +8,8 @@ import 'package:po_pal/theme/light_theme.dart';
 import 'package:po_pal/utilities/loading/loading_screen.dart';
 import 'package:po_pal/views/forgot_password_view.dart';
 import 'package:po_pal/views/login_view.dart';
+import 'package:po_pal/views/main_view.dart';
 import 'package:po_pal/views/register_view.dart';
-import 'package:po_pal/views/tracking_view.dart';
 import 'package:po_pal/views/verify_email_view.dart';
 
 void main() {
@@ -45,7 +45,7 @@ class HomePage extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return const TrackingView();
+          return MainView(userId: state.userId);
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
