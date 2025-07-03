@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:po_pal/services/cloud/cloud_exceptions.dart';
 import 'package:po_pal/services/cloud/cloud_exercise.dart';
+import 'package:po_pal/services/cloud/cloud_workout.dart';
 
 class FirebaseCloudStorage {
   final _firestore = FirebaseFirestore.instance;
@@ -13,15 +14,6 @@ class FirebaseCloudStorage {
   CollectionReference<Map<String, dynamic>> _exercises(String uid) =>
       _userDoc(uid).collection('exercises');
 
-  // Create user document
-  Future<void> createUserDocument({required String uid}) async {
-    try {
-      await _userDoc(uid).set({'_': 1}, SetOptions(merge: true));
-    } catch (e) {
-      throw CouldNotCreateUserDocumentException();
-    }
-  }
-
   // Create exercise
   Future<CloudExercise> createExercise({
     required String uid,
@@ -30,6 +22,13 @@ class FirebaseCloudStorage {
     required int reps,
   }) async {
     try {
+      final userRef = _userDoc(uid);
+      final userSnap = await userRef.get();
+
+      if (!userSnap.exists) {
+        await userRef.set({'_': 1}, SetOptions(merge: true));
+      }
+
       final docRef = await _exercises(
         uid,
       ).add({'name': name, 'weight': weight, 'reps': reps});
@@ -41,7 +40,7 @@ class FirebaseCloudStorage {
     }
   }
 
-  //get all notes
+  // Get all exercises
   Stream<Iterable<CloudExercise>> allExercises({required String uid}) {
     try {
       return _exercises(uid).snapshots().map(
@@ -53,7 +52,7 @@ class FirebaseCloudStorage {
     }
   }
 
-  //update exercise
+  // Update exercise
   Future<void> updateExercise({
     required String uid,
     required String documentId,
@@ -83,12 +82,84 @@ class FirebaseCloudStorage {
     }
   }
 
-  // Delete user document
+  // Workouts collection reference
+  CollectionReference<Map<String, dynamic>> _workouts(String uid) =>
+      _userDoc(uid).collection('workouts');
+
+  // Create workout
+  Future<CloudWorkout> createWorkout({
+    required String uid,
+    required String title,
+    required List<String> exerciseIds,
+  }) async {
+    try {
+      final userRef = _userDoc(uid);
+      final userSnap = await userRef.get();
+
+      if (!userSnap.exists) {
+        await userRef.set({'_': 1}, SetOptions(merge: true));
+      }
+
+      final docRef = await _workouts(
+        uid,
+      ).add({'title': title, 'exerciseIds': exerciseIds});
+
+      final docSnap = await docRef.get();
+      return CloudWorkout.fromSnapshot(docSnap);
+    } catch (e) {
+      throw CouldNotCreateWorkoutException();
+    }
+  }
+
+  // Update workout
+  Future<void> updateWorkout({
+    required String uid,
+    required String documentId,
+    required String title,
+    required List<String> exerciseIds,
+  }) async {
+    try {
+      await _workouts(
+        uid,
+      ).doc(documentId).update({'title': title, 'exerciseIds': exerciseIds});
+    } catch (e) {
+      throw CouldNotUpdateWorkoutException();
+    }
+  }
+
+  // Delete workout
+  Future<void> deleteWorkout({
+    required String uid,
+    required String documentId,
+  }) async {
+    try {
+      await _workouts(uid).doc(documentId).delete();
+    } catch (e) {
+      throw CouldNotDeleteWorkoutException();
+    }
+  }
+
+  // Get all workouts
+  Stream<Iterable<CloudWorkout>> allWorkouts({required String uid}) {
+    try {
+      return _workouts(uid).snapshots().map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => CloudWorkout.fromSnapshot(doc)),
+      );
+    } catch (e) {
+      throw CouldNotGetWorkoutsException();
+    }
+  }
+
   Future<void> deleteUser({required String uid}) async {
     try {
-      //delete subcollections first
       final exerciseDocs = await _exercises(uid).get();
       for (var doc in exerciseDocs.docs) {
+        await doc.reference.delete();
+      }
+
+      final workoutDocs = await _workouts(uid).get();
+      for (var doc in workoutDocs.docs) {
         await doc.reference.delete();
       }
 

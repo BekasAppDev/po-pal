@@ -11,17 +11,24 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Settings',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(56),
+        child: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () => Navigator.pop(context),
           ),
+          title: const Text(
+            'Settings',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
         children: [

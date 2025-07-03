@@ -26,6 +26,7 @@ class AuthStateRegistering extends AuthState {
 
 class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
+  String get userId => user.id;
   const AuthStateLoggedIn({required this.user, required super.isLoading});
 }
 
