@@ -5,11 +5,7 @@ import 'package:flutter/foundation.dart';
 @immutable
 abstract class AuthState {
   final bool isLoading;
-  final String loadingText;
-  const AuthState({
-    required this.isLoading,
-    this.loadingText = 'Please wait a moment',
-  });
+  const AuthState({required this.isLoading});
 }
 
 class AuthStateUninitialized extends AuthState {
@@ -36,11 +32,7 @@ class AuthStateNeedsVerification extends AuthState {
 
 class AuthStateLoggedOut extends AuthState with EquatableMixin {
   final Exception? exception;
-  const AuthStateLoggedOut({
-    required this.exception,
-    required super.isLoading,
-    super.loadingText,
-  });
+  const AuthStateLoggedOut({required this.exception, required super.isLoading});
 
   @override
   List<Object?> get props => [exception, isLoading];

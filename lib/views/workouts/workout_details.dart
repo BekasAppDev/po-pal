@@ -4,7 +4,7 @@ import 'package:po_pal/services/cloud/cloud_workout.dart';
 import 'package:po_pal/services/cloud/firebase_cloud_storage.dart';
 import 'package:po_pal/utilities/dialogs/delete_workout_dialog.dart';
 import 'package:po_pal/utilities/dialogs/remove_exercise_dialog.dart';
-import 'package:po_pal/utilities/overlays/add_exercises_overlay';
+import 'package:po_pal/utilities/overlays/add_exercises_overlay.dart';
 import 'package:po_pal/views/exercises/exercise_details.dart';
 
 class WorkoutDetails extends StatefulWidget {
@@ -23,15 +23,17 @@ class WorkoutDetails extends StatefulWidget {
 
 class _WorkoutDetailsState extends State<WorkoutDetails> {
   late List<String> exerciseIds;
+  late final FirebaseCloudStorage _storage;
 
   @override
   void initState() {
-    super.initState();
+    _storage = FirebaseCloudStorage();
     exerciseIds = List<String>.from(widget.workout.exerciseIds);
+    super.initState();
   }
 
   void updateWorkout(List<String> updatedIds) async {
-    await FirebaseCloudStorage().updateWorkout(
+    await _storage.updateWorkout(
       uid: widget.userId,
       documentId: widget.workout.documentId,
       title: widget.workout.title,
@@ -54,8 +56,6 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final storage = FirebaseCloudStorage();
-
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -72,7 +72,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                     context,
                     userId: widget.userId,
                     existingExerciseIds: exerciseIds,
-                    storage: storage,
+                    storage: _storage,
                   );
 
                   if (newExerciseIds != null && newExerciseIds.isNotEmpty) {
@@ -83,7 +83,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
                 case 'delete':
                   final shouldDelete = await showDeleteWorkoutDialog(context);
                   if (shouldDelete == true) {
-                    await storage.deleteWorkout(
+                    await _storage.deleteWorkout(
                       uid: widget.userId,
                       documentId: widget.workout.documentId,
                     );
@@ -103,7 +103,7 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: StreamBuilder<Iterable<CloudExercise>>(
-          stream: storage.allExercises(uid: widget.userId),
+          stream: _storage.allExercises(uid: widget.userId),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());

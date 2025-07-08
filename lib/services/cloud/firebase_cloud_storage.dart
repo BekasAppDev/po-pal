@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:po_pal/services/cloud/cloud_exceptions.dart';
 import 'package:po_pal/services/cloud/cloud_exercise.dart';
+import 'package:po_pal/services/cloud/cloud_exercise_history.dart';
 import 'package:po_pal/services/cloud/cloud_workout.dart';
 
 class FirebaseCloudStorage {
@@ -13,6 +14,16 @@ class FirebaseCloudStorage {
   // Exercises collection reference
   CollectionReference<Map<String, dynamic>> _exercises(String uid) =>
       _userDoc(uid).collection('exercises');
+
+  // Workouts collection reference
+  CollectionReference<Map<String, dynamic>> _workouts(String uid) =>
+      _userDoc(uid).collection('workouts');
+
+  // Exercise History subcollection reference
+  CollectionReference<Map<String, dynamic>> _exerciseHistory(
+    String uid,
+    String exerciseId,
+  ) => _exercises(uid).doc(exerciseId).collection('history');
 
   // Create exercise
   Future<CloudExercise> createExercise({
@@ -31,7 +42,7 @@ class FirebaseCloudStorage {
 
       final docRef = await _exercises(
         uid,
-      ).add({'name': name, 'weight': weight, 'reps': reps});
+      ).add({'name': name, 'weight': weight, 'reps': reps, 'history': []});
 
       final docSnap = await docRef.get();
       return CloudExercise.fromSnapshot(docSnap);
@@ -52,6 +63,21 @@ class FirebaseCloudStorage {
     }
   }
 
+  // Get exercise history
+  Stream<Iterable<CloudExerciseHistory>> getExerciseHistory({
+    required String uid,
+    required String exerciseId,
+  }) {
+    return _exerciseHistory(uid, exerciseId)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs.map(
+            (doc) => CloudExerciseHistory.fromSnapshot(doc),
+          ),
+        );
+  }
+
   // Update exercise
   Future<void> updateExercise({
     required String uid,
@@ -60,11 +86,19 @@ class FirebaseCloudStorage {
     required int reps,
   }) async {
     try {
-      final updates = <String, dynamic>{};
-      updates['weight'] = weight;
-      updates['reps'] = reps;
+      final doc = await _exercises(uid).doc(documentId).get();
+      if (!doc.exists) throw CouldNotUpdateExerciseException();
 
-      await _exercises(uid).doc(documentId).update(updates);
+      final currentData = doc.data()!;
+      await _exerciseHistory(uid, documentId).add({
+        'weight': currentData['weight'],
+        'reps': currentData['reps'],
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      await _exercises(
+        uid,
+      ).doc(documentId).update({'weight': weight, 'reps': reps});
     } catch (e) {
       throw CouldNotUpdateExerciseException();
     }
@@ -81,10 +115,6 @@ class FirebaseCloudStorage {
       throw CouldNotDeleteExerciseException();
     }
   }
-
-  // Workouts collection reference
-  CollectionReference<Map<String, dynamic>> _workouts(String uid) =>
-      _userDoc(uid).collection('workouts');
 
   // Create workout
   Future<CloudWorkout> createWorkout({
@@ -169,7 +199,7 @@ class FirebaseCloudStorage {
     }
   }
 
-  //singleton
+  // Singleton
   static final FirebaseCloudStorage _shared =
       FirebaseCloudStorage._sharedInstance();
   FirebaseCloudStorage._sharedInstance();

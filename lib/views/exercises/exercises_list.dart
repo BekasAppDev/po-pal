@@ -80,6 +80,7 @@ class ExerciseList extends StatelessWidget {
                       vertical: 16,
                     ),
                     decoration: const BoxDecoration(
+                      color: Colors.white,
                       border: Border(
                         bottom: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
                       ),
