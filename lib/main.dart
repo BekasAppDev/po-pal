@@ -6,11 +6,13 @@ import 'package:po_pal/services/auth/bloc/auth_states.dart';
 import 'package:po_pal/services/auth/firebase_auth_provider.dart';
 import 'package:po_pal/theme/light_theme.dart';
 import 'package:po_pal/utilities/loading/loading_screen.dart';
-import 'package:po_pal/views/forgot_password_view.dart';
-import 'package:po_pal/views/login_view.dart';
-import 'package:po_pal/views/main_view.dart';
-import 'package:po_pal/views/register_view.dart';
-import 'package:po_pal/views/verify_email_view.dart';
+import 'package:po_pal/views/authentication/forgot_password_view.dart';
+import 'package:po_pal/views/authentication/login_view.dart';
+import 'package:po_pal/views/navigation_view.dart';
+import 'package:po_pal/views/authentication/register_view.dart';
+import 'package:po_pal/views/authentication/verify_email_view.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:po_pal/views/offline_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,14 +40,29 @@ class HomePage extends StatelessWidget {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (BuildContext context, AuthState state) {
         if (state.isLoading) {
-          LoadingScreen().show(context: context, text: state.loadingText);
+          LoadingScreen().show(context: context);
         } else {
           LoadingScreen().hide();
         }
       },
       builder: (context, state) {
         if (state is AuthStateLoggedIn) {
-          return MainView(userId: state.userId);
+          return StreamBuilder<ConnectivityResult>(
+            stream: Connectivity().onConnectivityChanged.map(
+              (results) =>
+                  results.isNotEmpty ? results.first : ConnectivityResult.none,
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active &&
+                  snapshot.hasData) {
+                final hasConnection = snapshot.data != ConnectivityResult.none;
+                return hasConnection
+                    ? MainView(userId: state.userId)
+                    : const OfflineView();
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          );
         } else if (state is AuthStateNeedsVerification) {
           return const VerifyEmailView();
         } else if (state is AuthStateLoggedOut) {
@@ -55,7 +72,16 @@ class HomePage extends StatelessWidget {
         } else if (state is AuthStateForgotPassword) {
           return const ForgotPasswordView();
         } else {
-          return const Scaffold(body: Text('if i end up here i f***'));
+          return Scaffold(
+            body: Center(
+              child: Image.asset(
+                'assets/po_pal_icon.png',
+                width: 150,
+                height: 150,
+                color: Color.fromARGB(255, 234, 232, 232),
+              ),
+            ),
+          );
         }
       },
     );

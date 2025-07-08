@@ -45,36 +45,33 @@ class _MainViewState extends State<MainView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(56),
-        child: AppBar(
-          backgroundColor: Colors.black,
-          elevation: 0,
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('assets/po_pal_icon.png', color: Colors.white),
-          ),
-          centerTitle: true,
-          title: const Text(
-            'PO Pal',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.settings_rounded, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsView()),
-                );
-              },
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset('assets/po_pal_icon.png', color: Colors.white),
         ),
+        centerTitle: true,
+        title: const Text(
+          'PO Pal',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_rounded, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsView()),
+              );
+            },
+          ),
+        ],
       ),
       body: PageView(
         controller: _pageController,

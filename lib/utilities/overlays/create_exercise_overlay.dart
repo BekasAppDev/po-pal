@@ -19,79 +19,77 @@ Future<Map<String, dynamic>?> showCreateExerciseOverlay(
         builder: (context, setState) {
           return AlertDialog(
             title: const Text('New Exercise'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Exercise Name',
-                    labelStyle: TextStyle(color: Colors.black), // Add this line
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                    ), // Add this line
-                    errorText: nameErrorText.isNotEmpty ? nameErrorText : null,
-                    errorStyle: TextStyle(
-                      color: Color.fromARGB(255, 212, 24, 24),
-                      fontSize: 12.0,
-                    ),
-                    border: const OutlineInputBorder(),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      errorText:
+                          nameErrorText.isNotEmpty ? nameErrorText : null,
+                      errorStyle: TextStyle(
                         color: Color.fromARGB(255, 212, 24, 24),
-                        width: 1.0,
+                        fontSize: 12.0,
+                      ),
+                      border: const OutlineInputBorder(),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 212, 24, 24),
+                          width: 1.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: weightController,
-                  decoration: InputDecoration(
-                    labelText: 'Starting Weight',
-                    labelStyle: TextStyle(color: Colors.black), // Add this line
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                    ), // Add this line
-                    errorText:
-                        weightErrorText.isNotEmpty ? weightErrorText : null,
-                    errorStyle: TextStyle(
-                      color: Color.fromARGB(255, 212, 24, 24),
-                      fontSize: 12.0,
-                    ),
-                    border: const OutlineInputBorder(),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: weightController,
+                    decoration: InputDecoration(
+                      labelText: 'Starting Weight',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      errorText:
+                          weightErrorText.isNotEmpty ? weightErrorText : null,
+                      errorStyle: TextStyle(
                         color: Color.fromARGB(255, 212, 24, 24),
-                        width: 1.0,
+                        fontSize: 12.0,
+                      ),
+                      border: const OutlineInputBorder(),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 212, 24, 24),
+                          width: 1.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: repsController,
-                  decoration: InputDecoration(
-                    labelText: 'Starting Reps',
-                    labelStyle: TextStyle(color: Colors.black), // Add this line
-                    floatingLabelStyle: TextStyle(
-                      color: Colors.black,
-                    ), // Add this line
-                    errorText: repsErrorText.isNotEmpty ? repsErrorText : null,
-                    errorStyle: TextStyle(
-                      color: Color.fromARGB(255, 212, 24, 24),
-                      fontSize: 12.0,
-                    ),
-                    border: const OutlineInputBorder(),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: repsController,
+                    decoration: InputDecoration(
+                      labelText: 'Starting Reps',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      errorText:
+                          repsErrorText.isNotEmpty ? repsErrorText : null,
+                      errorStyle: TextStyle(
                         color: Color.fromARGB(255, 212, 24, 24),
-                        width: 1.0,
+                        fontSize: 12.0,
+                      ),
+                      border: const OutlineInputBorder(),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color.fromARGB(255, 212, 24, 24),
+                          width: 1.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             actions: [
               TextButton(
