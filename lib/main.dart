@@ -57,7 +57,7 @@ class HomePage extends StatelessWidget {
                   snapshot.hasData) {
                 final hasConnection = snapshot.data != ConnectivityResult.none;
                 return hasConnection
-                    ? MainView(userId: state.userId)
+                    ? NavigationView(userId: state.userId)
                     : const OfflineView();
               }
               return const Center(child: CircularProgressIndicator());
