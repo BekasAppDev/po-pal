@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:120474864431:android:fede4313b2eb21bf15afda",
+        "android_client_info": {
+          "package_name": "com.bekasappdev.po_pal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDmCzEFdgNNCAeZ7goXQIEHWdVApdFce0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:120474864431:android:b8fcafed0c5cd90215afda",
         "android_client_info": {
           "package_name": "com.example.po_pal"
