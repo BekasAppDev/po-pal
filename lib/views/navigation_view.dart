@@ -3,17 +3,17 @@ import 'package:po_pal/views/exercises/exercises_view.dart';
 import 'package:po_pal/views/settings_view.dart';
 import 'package:po_pal/views/workouts/workouts_view.dart';
 
-class MainView extends StatefulWidget {
+class NavigationView extends StatefulWidget {
   final String userId;
-  const MainView({super.key, required this.userId});
+  const NavigationView({super.key, required this.userId});
 
   @override
-  State<MainView> createState() => _MainViewState();
+  State<NavigationView> createState() => _NavigationViewState();
 }
 
-class _MainViewState extends State<MainView> {
+class _NavigationViewState extends State<NavigationView> {
   late final PageController _pageController;
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   @override
   void initState() {
@@ -76,6 +76,9 @@ class _MainViewState extends State<MainView> {
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
+        physics: BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.fast,
+        ),
         children: [
           WorkoutsView(userId: widget.userId),
           ExercisesView(userId: widget.userId),
@@ -84,13 +87,21 @@ class _MainViewState extends State<MainView> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onNavBarTapped,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center_rounded),
+            icon: Icon(Icons.fitness_center_rounded, size: 24),
+            activeIcon: Icon(Icons.fitness_center_rounded, size: 26),
             label: 'My Workouts',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted_rounded),
+            icon: Icon(Icons.format_list_bulleted_rounded, size: 24),
+            activeIcon: Icon(Icons.format_list_bulleted_rounded, size: 26),
             label: 'My Exercises',
           ),
         ],
