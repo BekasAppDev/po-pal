@@ -31,11 +31,25 @@ class WorkoutList extends StatelessWidget {
         final workouts = snapshot.data?.toList() ?? [];
         if (workouts.isEmpty) {
           return Center(
-            child: Image.asset(
-              'assets/po_pal_icon.png',
-              width: 150,
-              height: 150,
-              color: const Color.fromARGB(255, 234, 232, 232),
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                Image.asset(
+                  'assets/po_pal_icon.png',
+                  width: 150,
+                  height: 150,
+                  color: Color.fromARGB(255, 234, 232, 232),
+                ),
+                Positioned(
+                  bottom: 150 + 10,
+                  child: Text(
+                    'No workouts yet.\nGet started by creating a workout!',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           );
         }

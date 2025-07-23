@@ -65,6 +65,7 @@ Future<Map<String, dynamic>?> showCreateExerciseOverlay(
                         ),
                       ),
                     ),
+                    keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 10),
                   TextField(
@@ -87,6 +88,7 @@ Future<Map<String, dynamic>?> showCreateExerciseOverlay(
                         ),
                       ),
                     ),
+                    keyboardType: TextInputType.number,
                   ),
                 ],
               ),
