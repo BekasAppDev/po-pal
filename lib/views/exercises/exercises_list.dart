@@ -15,14 +15,7 @@ class ExerciseList extends StatelessWidget {
       stream: storage.allExercises(uid: userId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: Image.asset(
-              'assets/po_pal_icon.png',
-              width: 150,
-              height: 150,
-              color: Color.fromARGB(255, 234, 232, 232),
-            ),
-          );
+          return Container();
         }
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
