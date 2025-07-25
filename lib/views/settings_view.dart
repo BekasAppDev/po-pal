@@ -29,7 +29,6 @@ class SettingsView extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Divider(height: 1, thickness: 1, color: Colors.black),
           ListTile(
             title: const Text('Log Out'),
             onTap: () async {
@@ -47,7 +46,6 @@ class SettingsView extends StatelessWidget {
               'Delete account',
               style: TextStyle(color: Color.fromARGB(255, 212, 24, 24)),
             ),
-
             onTap: () async {
               final password = await showDeleteUserOverlay(context);
               if (password != null && context.mounted) {
@@ -58,6 +56,7 @@ class SettingsView extends StatelessWidget {
               }
             },
           ),
+          Divider(height: 1, thickness: 1, color: Colors.black),
         ],
       ),
     );
