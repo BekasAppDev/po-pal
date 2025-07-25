@@ -58,90 +58,72 @@ class ExerciseList extends StatelessWidget {
           (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
         );
 
-        return Stack(
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/po_pal_icon.png',
-                width: 150,
-                height: 150,
-                color: Color.fromARGB(255, 234, 232, 232),
-              ),
-            ),
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: exercises.length,
+          itemBuilder: (context, index) {
+            final exercise = exercises[index];
 
-            ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemCount: exercises.length,
-              itemBuilder: (context, index) {
-                final exercise = exercises[index];
-
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => ExerciseDetails(
-                              exercise: exercise,
-                              userId: userId,
-                            ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
-                    ),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            exercise.name,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text('Kg', style: TextStyle(fontSize: 12)),
-                              Text(
-                                '${exercise.weight}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Reps',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '${exercise.reps}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            ExerciseDetails(exercise: exercise, userId: userId),
                   ),
                 );
               },
-            ),
-          ],
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    bottom: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        exercise.name,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Kg', style: TextStyle(fontSize: 12)),
+                          Text(
+                            '${exercise.weight}',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Reps', style: TextStyle(fontSize: 12)),
+                          Text(
+                            '${exercise.reps}',
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );

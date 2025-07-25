@@ -58,60 +58,46 @@ class WorkoutList extends StatelessWidget {
           (a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()),
         );
 
-        return Stack(
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/po_pal_icon.png',
-                width: 150,
-                height: 150,
-                color: const Color.fromARGB(255, 234, 232, 232),
-              ),
-            ),
-            ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemCount: workouts.length,
-              itemBuilder: (context, index) {
-                final workout = workouts[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => WorkoutDetails(
-                              workout: workout,
-                              userId: userId,
-                            ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
-                    ),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            workout.title,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: workouts.length,
+          itemBuilder: (context, index) {
+            final workout = workouts[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            WorkoutDetails(workout: workout, userId: userId),
                   ),
                 );
               },
-            ),
-          ],
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 16,
+                ),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                    bottom: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        workout.title,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
