@@ -16,26 +16,30 @@ class WorkoutsView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: WorkoutList(userId: userId),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await showCreateWorkoutOverlay(
-            context,
-            userId: userId,
-            storage: storage,
-          );
-          if (result != null) {
-            await storage.createWorkout(
-              uid: userId,
-              title: result['title'],
-              exerciseIds: result['exerciseIds'],
+      floatingActionButton: SizedBox(
+        width: 60,
+        height: 60,
+        child: FloatingActionButton(
+          onPressed: () async {
+            final result = await showCreateWorkoutOverlay(
+              context,
+              userId: userId,
+              storage: storage,
             );
-          }
-        },
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-        shape: const CircleBorder(),
-        elevation: 0,
-        highlightElevation: 0,
-        child: const Icon(Icons.add_rounded, size: 34),
+            if (result != null) {
+              await storage.createWorkout(
+                uid: userId,
+                title: result['title'],
+                exerciseIds: result['exerciseIds'],
+              );
+            }
+          },
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+          shape: const CircleBorder(),
+          elevation: 0,
+          highlightElevation: 0,
+          child: const Icon(Icons.add_rounded, size: 42),
+        ),
       ),
     );
   }

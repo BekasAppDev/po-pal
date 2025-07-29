@@ -6,12 +6,10 @@ import 'package:po_pal/services/cloud/firebase_cloud_storage.dart';
 class ExerciseChart extends StatelessWidget {
   final String userId;
   final String exerciseId;
-  final bool mode;
   const ExerciseChart({
     super.key,
     required this.userId,
     required this.exerciseId,
-    required this.mode,
   });
 
   @override
@@ -30,23 +28,26 @@ class ExerciseChart extends StatelessWidget {
               ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
         if (history.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.insights_outlined, size: 70, color: Colors.grey),
-                const SizedBox(height: 16),
-                const Text(
-                  "No progress yet",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Your progress on this exercise will appear here once you log a session.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black54),
-                ),
-              ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.insights_outlined, size: 70, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "No progress yet",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Your progress on this exercise will appear here once you log a session.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -54,36 +55,20 @@ class ExerciseChart extends StatelessWidget {
         final spots = List<FlSpot>.generate(history.length, (i) {
           final entry = history[i];
           final double value;
-          if (mode == false) {
-            value = (entry.weight).toDouble();
-          } else {
-            value = (entry.weight * entry.reps).toDouble();
-          }
+          value = (entry.weight).toDouble();
 
           return FlSpot(i.toDouble(), value);
         });
 
         final minY = 0.0;
-        final double maxY;
-        if (mode == false) {
-          maxY =
-              (history
-                  .map((e) => (e.weight).toDouble())
-                  .fold<double>(
-                    0,
-                    (prev, element) => element > prev ? element : prev,
-                  )) *
-              1.1;
-        } else {
-          maxY =
-              (history
-                  .map((e) => (e.weight * e.reps).toDouble())
-                  .fold<double>(
-                    0,
-                    (prev, element) => element > prev ? element : prev,
-                  )) *
-              1.1;
-        }
+        final maxY =
+            (history
+                .map((e) => (e.weight).toDouble())
+                .fold<double>(
+                  0,
+                  (prev, element) => element > prev ? element : prev,
+                )) *
+            1.1;
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: LineChart(
@@ -100,12 +85,11 @@ class ExerciseChart extends StatelessWidget {
                   barWidth: 3,
                   color: Colors.black,
                   dotData: FlDotData(show: false),
-
                   belowBarData: BarAreaData(
                     show: true,
                     gradient: LinearGradient(
                       colors: [
-                        Color.fromRGBO(0, 0, 0, 0.7),
+                        Color.fromRGBO(0, 0, 0, 0.8),
                         Color.fromRGBO(255, 255, 255, 0.0),
                       ],
                       begin: Alignment.topCenter,
@@ -129,7 +113,9 @@ class ExerciseChart extends StatelessWidget {
                         ),
                       );
                     },
-                    interval: (maxY - minY) / 5,
+                    interval: (maxY - minY) / 4,
+                    minIncluded: true,
+                    maxIncluded: true,
                   ),
                 ),
                 rightTitles: AxisTitles(
@@ -185,7 +171,7 @@ class ExerciseChart extends StatelessWidget {
                 show: true,
                 drawVerticalLine: false,
                 drawHorizontalLine: true,
-                horizontalInterval: (maxY - minY) / 5,
+                horizontalInterval: (maxY - minY) / 4,
                 getDrawingHorizontalLine:
                     (value) => const FlLine(
                       color: Color.fromARGB(255, 234, 232, 232),

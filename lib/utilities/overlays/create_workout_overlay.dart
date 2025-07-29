@@ -81,7 +81,7 @@ Future<Map<String, dynamic>?> showCreateWorkoutOverlay(
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.22,
                       child:
                           isLoading
                               ? const Center(child: CircularProgressIndicator())

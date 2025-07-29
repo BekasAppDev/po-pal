@@ -29,7 +29,7 @@ class FirebaseCloudStorage {
   Future<CloudExercise> createExercise({
     required String uid,
     required String name,
-    required int weight,
+    required double weight,
     required int reps,
   }) async {
     try {
@@ -40,9 +40,13 @@ class FirebaseCloudStorage {
         await userRef.set({'_': 1}, SetOptions(merge: true));
       }
 
-      final docRef = await _exercises(
-        uid,
-      ).add({'name': name, 'weight': weight, 'reps': reps, 'history': []});
+      final docRef = await _exercises(uid).add({
+        'name': name,
+        'weight': weight,
+        'reps': reps,
+        'relevancy': 1,
+        'history': [],
+      });
 
       final docSnap = await docRef.get();
       return CloudExercise.fromSnapshot(docSnap);
@@ -82,7 +86,7 @@ class FirebaseCloudStorage {
   Future<void> updateExercise({
     required String uid,
     required String documentId,
-    required int weight,
+    required double weight,
     required int reps,
   }) async {
     try {
@@ -96,9 +100,11 @@ class FirebaseCloudStorage {
         'timestamp': FieldValue.serverTimestamp(),
       });
 
-      await _exercises(
-        uid,
-      ).doc(documentId).update({'weight': weight, 'reps': reps});
+      await _exercises(uid).doc(documentId).update({
+        'weight': weight,
+        'reps': reps,
+        'relevancy': FieldValue.increment(1),
+      });
     } catch (e) {
       throw CouldNotUpdateExerciseException();
     }
@@ -132,7 +138,7 @@ class FirebaseCloudStorage {
 
       final docRef = await _workouts(
         uid,
-      ).add({'title': title, 'exerciseIds': exerciseIds});
+      ).add({'title': title, 'exerciseIds': exerciseIds, 'relevancy': 1});
 
       final docSnap = await docRef.get();
       return CloudWorkout.fromSnapshot(docSnap);
@@ -149,9 +155,11 @@ class FirebaseCloudStorage {
     required List<String> exerciseIds,
   }) async {
     try {
-      await _workouts(
-        uid,
-      ).doc(documentId).update({'title': title, 'exerciseIds': exerciseIds});
+      await _workouts(uid).doc(documentId).update({
+        'title': title,
+        'exerciseIds': exerciseIds,
+        'relevancy': FieldValue.increment(1),
+      });
     } catch (e) {
       throw CouldNotUpdateWorkoutException();
     }

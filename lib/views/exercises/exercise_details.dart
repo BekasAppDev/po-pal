@@ -5,7 +5,6 @@ import 'package:po_pal/services/cloud/cloud_exercise_history.dart';
 import 'package:po_pal/services/cloud/firebase_cloud_storage.dart';
 import 'package:po_pal/utilities/charts/exercise_chart.dart';
 import 'package:po_pal/utilities/dialogs/delete_exercise_dialog.dart';
-import 'package:string_validator/string_validator.dart';
 
 class ExerciseDetails extends StatefulWidget {
   final CloudExercise exercise;
@@ -32,7 +31,10 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
   void initState() {
     _storage = FirebaseCloudStorage();
     _weightController = TextEditingController(
-      text: widget.exercise.weight.toString(),
+      text:
+          widget.exercise.weight % 1 == 0
+              ? widget.exercise.weight.toInt().toString()
+              : widget.exercise.weight.toString(),
     );
     _repsController = TextEditingController(
       text: widget.exercise.reps.toString(),
@@ -86,12 +88,12 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
+              const SizedBox(height: 40),
               SizedBox(
                 height: 250,
                 child: ExerciseChart(
                   userId: widget.userId,
                   exerciseId: widget.exercise.documentId,
-                  mode: false,
                 ),
               ),
               const SizedBox(height: 40),
@@ -144,6 +146,7 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
               TextButton(
                 onPressed: () async {
                   final weight = _weightController.text.trim();
@@ -154,14 +157,14 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
 
                   if (weight.isEmpty) {
                     newWeightError = 'Please fill in the weight';
-                  } else if (!isNumeric(weight)) {
+                  } else if (double.tryParse(weight) == null) {
                     newWeightError = 'Weight must be a number';
                   }
 
                   if (reps.isEmpty) {
                     newRepsError = 'Please fill in the reps';
-                  } else if (!isNumeric(reps)) {
-                    newRepsError = 'Reps must be a number';
+                  } else if (int.tryParse(reps) == null) {
+                    newRepsError = 'Reps must be an integer';
                   }
 
                   setState(() {
@@ -173,7 +176,7 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
                     await _storage.updateExercise(
                       uid: widget.userId,
                       documentId: widget.exercise.documentId,
-                      weight: int.parse(weight),
+                      weight: double.parse(weight),
                       reps: int.parse(reps),
                     );
                   }
@@ -188,52 +191,70 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
                 ),
                 child: const Text('Update Exercise'),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'History',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              const SizedBox(height: 40),
+              Divider(
+                height: 1,
+                thickness: 2,
+                color: Colors.black,
+                radius: BorderRadius.circular(1),
               ),
-              const Divider(),
-              StreamBuilder<Iterable<CloudExerciseHistory>>(
-                stream: _storage.getExerciseHistory(
-                  uid: widget.userId,
-                  exerciseId: widget.exercise.documentId,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Center(child: Text('Error loading history'));
-                  }
+              Theme(
+                data: Theme.of(
+                  context,
+                ).copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  title: const Text(
+                    'History',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  children: [
+                    StreamBuilder<Iterable<CloudExerciseHistory>>(
+                      stream: _storage.getExerciseHistory(
+                        uid: widget.userId,
+                        exerciseId: widget.exercise.documentId,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: Text('Could not load history'),
+                          );
+                        }
 
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return const Center(child: CircularProgressIndicator());
-                    case ConnectionState.active:
-                    case ConnectionState.done:
-                      final historyEntries = snapshot.data ?? [];
-                      return Column(
-                        children:
-                            historyEntries
-                                .map(
-                                  (entry) => ListTile(
-                                    title: Text(
-                                      '${entry.weight} × ${entry.reps}',
-                                    ),
-                                    trailing: Text(
-                                      DateFormat(
-                                        'dd/MM/yy',
-                                      ).format(entry.timestamp),
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                      );
-                    default:
-                      return const SizedBox();
-                  }
-                },
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          case ConnectionState.active:
+                          case ConnectionState.done:
+                            final historyEntries = snapshot.data ?? [];
+                            return Column(
+                              children:
+                                  historyEntries
+                                      .map(
+                                        (entry) => ListTile(
+                                          title: Text(
+                                            '${entry.weight % 1 == 0 ? entry.weight.toInt() : entry.weight} × ${entry.reps}',
+                                          ),
+                                          trailing: Text(
+                                            DateFormat(
+                                              'dd/MM/yy',
+                                            ).format(entry.timestamp),
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                            );
+                          default:
+                            return const SizedBox();
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

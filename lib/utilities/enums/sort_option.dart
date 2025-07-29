@@ -1,0 +1,1 @@
+enum SortOption { alphabetical, mostRelevant }

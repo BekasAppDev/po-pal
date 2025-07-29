@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:po_pal/services/cloud/cloud_exercise.dart';
 import 'package:po_pal/services/cloud/cloud_workout.dart';
 import 'package:po_pal/services/cloud/firebase_cloud_storage.dart';
+import 'package:po_pal/services/preferences/bloc/pref_bloc.dart';
+import 'package:po_pal/services/preferences/bloc/pref_states.dart';
 import 'package:po_pal/utilities/dialogs/delete_workout_dialog.dart';
 import 'package:po_pal/utilities/dialogs/remove_exercise_dialog.dart';
+import 'package:po_pal/utilities/enums/sort_option.dart';
 import 'package:po_pal/utilities/overlays/add_exercises_overlay.dart';
 import 'package:po_pal/views/exercises/exercise_details.dart';
 
@@ -102,96 +106,122 @@ class _WorkoutDetailsState extends State<WorkoutDetails> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: StreamBuilder<Iterable<CloudExercise>>(
-          stream: _storage.allExercises(uid: widget.userId),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: BlocBuilder<PrefBloc, PrefState>(
+          builder: (context, state) {
+            final SortOption sortOption =
+                state is PrefStateLoaded
+                    ? state.exerciseSortOption
+                    : SortOption.alphabetical;
 
-            final allExercises = snapshot.data!.toList();
-            final filtered =
-                allExercises
-                    .where((e) => exerciseIds.contains(e.documentId))
-                    .toList();
+            return StreamBuilder<Iterable<CloudExercise>>(
+              stream: _storage.allExercises(uid: widget.userId),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            if (filtered.isEmpty) {
-              return const Center(child: Text('No exercises in this workout.'));
-            }
+                final allExercises = snapshot.data!.toList();
+                final filtered =
+                    allExercises
+                        .where((e) => exerciseIds.contains(e.documentId))
+                        .toList();
 
-            return ListView.builder(
-              itemCount: filtered.length,
-              itemBuilder: (context, index) {
-                final exercise = filtered[index];
+                if (filtered.isEmpty) {
+                  return const Center(
+                    child: Text('No exercises in this workout.'),
+                  );
+                }
+                filtered.sort((a, b) {
+                  switch (sortOption) {
+                    case SortOption.alphabetical:
+                      return a.name.toLowerCase().compareTo(
+                        b.name.toLowerCase(),
+                      );
+                    case SortOption.mostRelevant:
+                      return b.relevancy.compareTo(a.relevancy);
+                  }
+                });
 
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (_) => ExerciseDetails(
-                              exercise: exercise,
-                              userId: widget.userId,
+                return ListView.builder(
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final exercise = filtered[index];
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => ExerciseDetails(
+                                  exercise: exercise,
+                                  userId: widget.userId,
+                                ),
+                          ),
+                        );
+                      },
+                      onLongPress: () async {
+                        final shouldDelete = await showRemoveExerciseDialog(
+                          context,
+                        );
+                        if (shouldDelete) {
+                          removeExercise(exercise.documentId);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                exercise.name,
+                                style: const TextStyle(fontSize: 16),
+                              ),
                             ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Kg',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    '${exercise.weight}',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Reps',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(
+                                    '${exercise.reps}',
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
-                  onLongPress: () async {
-                    final shouldDelete = await showRemoveExerciseDialog(
-                      context,
-                    );
-                    if (shouldDelete) {
-                      removeExercise(exercise.documentId);
-                    }
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 16,
-                    ),
-                    decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.black)),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            exercise.name,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text('Kg', style: TextStyle(fontSize: 12)),
-                              Text(
-                                '${exercise.weight}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Reps',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                '${exercise.reps}',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 );
               },
             );
