@@ -4,6 +4,8 @@ import 'package:po_pal/services/auth/bloc/auth_bloc.dart';
 import 'package:po_pal/services/auth/bloc/auth_events.dart';
 import 'package:po_pal/services/auth/bloc/auth_states.dart';
 import 'package:po_pal/services/auth/firebase_auth_provider.dart';
+import 'package:po_pal/services/preferences/bloc/pref_bloc.dart';
+import 'package:po_pal/services/preferences/bloc/pref_events.dart';
 import 'package:po_pal/theme/light_theme.dart';
 import 'package:po_pal/utilities/loading/loading_screen.dart';
 import 'package:po_pal/views/authentication/forgot_password_view.dart';
@@ -18,14 +20,18 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
-    BlocProvider<AuthBloc>.value(
-      value: AuthBloc(FirebaseAuthProvider()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(create: (_) => AuthBloc(FirebaseAuthProvider())),
+        BlocProvider<PrefBloc>(
+          create: (_) => PrefBloc()..add(const PrefEventLoadPreferences()),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'PO Pal',
         theme: lightTheme(),
         home: const HomePage(),
-        routes: {},
       ),
     ),
   );

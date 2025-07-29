@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:po_pal/utilities/nav_bar.dart';
 import 'package:po_pal/views/exercises/exercises_view.dart';
 import 'package:po_pal/views/settings_view.dart';
 import 'package:po_pal/views/workouts/workouts_view.dart';
@@ -84,27 +85,9 @@ class _NavigationViewState extends State<NavigationView> {
           ExercisesView(userId: widget.userId),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: NavBar(
         currentIndex: _selectedIndex,
         onTap: _onNavBarTapped,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.fitness_center_rounded, size: 24),
-            activeIcon: Icon(Icons.fitness_center_rounded, size: 26),
-            label: 'My Workouts',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted_rounded, size: 24),
-            activeIcon: Icon(Icons.format_list_bulleted_rounded, size: 26),
-            label: 'My Exercises',
-          ),
-        ],
       ),
     );
   }

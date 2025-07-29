@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:string_validator/string_validator.dart';
 
 Future<Map<String, dynamic>?> showCreateExerciseOverlay(
   BuildContext context,
@@ -114,13 +113,13 @@ Future<Map<String, dynamic>?> showCreateExerciseOverlay(
                     }
                     if (weight.isEmpty) {
                       weightErrorText = 'Please fill in the weight';
-                    } else if (!isNumeric(weight)) {
+                    } else if (double.tryParse(weight) == null) {
                       weightErrorText = 'Weight must be a number';
                     }
                     if (reps.isEmpty) {
                       repsErrorText = 'Please fill in the reps';
-                    } else if (!isNumeric(reps)) {
-                      repsErrorText = 'Reps must be a number';
+                    } else if (int.tryParse(reps) == null) {
+                      repsErrorText = 'Reps must be an integer';
                     }
 
                     if (nameErrorText.isEmpty &&
@@ -128,7 +127,7 @@ Future<Map<String, dynamic>?> showCreateExerciseOverlay(
                         repsErrorText.isEmpty) {
                       Navigator.of(context).pop({
                         'name': name,
-                        'weight': int.parse(weight),
+                        'weight': double.parse(weight),
                         'reps': int.parse(reps),
                       });
                     }
