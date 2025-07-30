@@ -17,6 +17,7 @@ class NavBar extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () => onTap(0),
+              behavior: HitTestBehavior.opaque,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -44,6 +45,7 @@ class NavBar extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () => onTap(1),
+              behavior: HitTestBehavior.opaque,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

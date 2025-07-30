@@ -13,11 +13,14 @@ class PrefBloc extends Bloc<PrefEvent, PrefState> {
           await PreferencesService.getExerciseSortPreference();
       final SortOption workoutSortOption =
           await PreferencesService.getWorkoutSortPreference();
+      final bool chartMode = await PreferencesService.getChartModePreference();
+
       emit(
         PrefStateLoaded(
           isKg: weightPref,
           exerciseSortOption: exerciseSortOption,
           workoutSortOption: workoutSortOption,
+          chartMode: chartMode,
         ),
       );
     });
@@ -32,6 +35,7 @@ class PrefBloc extends Bloc<PrefEvent, PrefState> {
             isKg: event.isKg,
             exerciseSortOption: state.exerciseSortOption,
             workoutSortOption: state.workoutSortOption,
+            chartMode: state.chartMode,
           ),
         );
       }
@@ -39,14 +43,17 @@ class PrefBloc extends Bloc<PrefEvent, PrefState> {
 
     //set exercise sort preference
     on<PrefEventSetExerciseSortPref>((event, emit) async {
-      await PreferencesService.setExerciseSortPreference(event.exerciseOption);
+      await PreferencesService.setExerciseSortPreference(
+        event.exerciseSortOption,
+      );
       final state = this.state;
       if (state is PrefStateLoaded) {
         emit(
           PrefStateLoaded(
             isKg: state.isKg,
-            exerciseSortOption: event.exerciseOption,
+            exerciseSortOption: event.exerciseSortOption,
             workoutSortOption: state.workoutSortOption,
+            chartMode: state.chartMode,
           ),
         );
       }
@@ -54,14 +61,33 @@ class PrefBloc extends Bloc<PrefEvent, PrefState> {
 
     //set workout sort preference
     on<PrefEventSetWorkoutSortPref>((event, emit) async {
-      await PreferencesService.setWorkoutSortPreference(event.workoutOption);
+      await PreferencesService.setWorkoutSortPreference(
+        event.workoutSortOption,
+      );
       final state = this.state;
       if (state is PrefStateLoaded) {
         emit(
           PrefStateLoaded(
             isKg: state.isKg,
             exerciseSortOption: state.exerciseSortOption,
-            workoutSortOption: event.workoutOption,
+            workoutSortOption: event.workoutSortOption,
+            chartMode: state.chartMode,
+          ),
+        );
+      }
+    });
+
+    //set chart mode preference
+    on<PrefEventSetChartModePref>((event, emit) async {
+      await PreferencesService.setChartModePreference(event.chartMode);
+      final state = this.state;
+      if (state is PrefStateLoaded) {
+        emit(
+          PrefStateLoaded(
+            isKg: state.isKg,
+            exerciseSortOption: state.exerciseSortOption,
+            workoutSortOption: state.workoutSortOption,
+            chartMode: event.chartMode,
           ),
         );
       }

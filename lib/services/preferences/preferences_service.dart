@@ -5,6 +5,7 @@ class PreferencesService {
   static const String _weightKey = 'weight_preference';
   static const String _exerciseSortKey = 'exercise_sort_preference';
   static const String _workoutSortKey = 'workout_sort_preference';
+  static const String _chartModeKey = 'chart_mode_preference';
 
   static Future<bool> getWeightPreference() async {
     final prefs = await SharedPreferences.getInstance();
@@ -36,5 +37,15 @@ class PreferencesService {
   static Future<void> setWorkoutSortPreference(SortOption option) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_workoutSortKey, option.index);
+  }
+
+  static Future<bool> getChartModePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_chartModeKey) ?? false;
+  }
+
+  static Future<void> setChartModePreference(bool isLoadMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_chartModeKey, isLoadMode);
   }
 }

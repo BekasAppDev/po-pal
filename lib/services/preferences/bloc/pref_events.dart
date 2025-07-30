@@ -16,11 +16,16 @@ class PrefEventSetWeightPref extends PrefEvent {
 }
 
 class PrefEventSetExerciseSortPref extends PrefEvent {
-  final SortOption exerciseOption;
-  const PrefEventSetExerciseSortPref(this.exerciseOption);
+  final SortOption exerciseSortOption;
+  const PrefEventSetExerciseSortPref(this.exerciseSortOption);
 }
 
 class PrefEventSetWorkoutSortPref extends PrefEvent {
-  final SortOption workoutOption;
-  const PrefEventSetWorkoutSortPref(this.workoutOption);
+  final SortOption workoutSortOption;
+  const PrefEventSetWorkoutSortPref(this.workoutSortOption);
+}
+
+class PrefEventSetChartModePref extends PrefEvent {
+  final bool chartMode;
+  const PrefEventSetChartModePref(this.chartMode);
 }
