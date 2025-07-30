@@ -9,6 +9,7 @@ import 'package:po_pal/utilities/dialogs/delete_exercise_dialog.dart';
 class ExerciseDetails extends StatefulWidget {
   final CloudExercise exercise;
   final String userId;
+
   const ExerciseDetails({
     super.key,
     required this.exercise,
@@ -23,7 +24,6 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
   late final TextEditingController _weightController;
   late final TextEditingController _repsController;
   late final FirebaseCloudStorage _storage;
-
   String weightErrorText = '';
   String repsErrorText = '';
 
@@ -88,9 +88,8 @@ class _ExerciseDetailsState extends State<ExerciseDetails> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              const SizedBox(height: 40),
               SizedBox(
-                height: 250,
+                height: 300,
                 child: ExerciseChart(
                   userId: widget.userId,
                   exerciseId: widget.exercise.documentId,
