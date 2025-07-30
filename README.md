@@ -1,16 +1,12 @@
 # po_pal
 
-A new Flutter project.
+Progressively overload by tracking your PR's with PO Pal.
 
-## Getting Started
+PO Pal - Gym Tracker
 
-This project is a starting point for a Flutter application.
+Track, analyze, and master your strength gains with PO Pal - the minimalist workout companion built for lifters who believe in simplicity. No fluff, just a clean and efficient way to log your lifts, monitor progress, and ensure you’re always pushing forward.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+• Effortless PR Tracking - Log weight and reps for every exercise, visualize your growth, and ensure you’re consistently getting stronger.
+• No restrictions - Add any exercise, create custom workouts, and train the way you want.
+• Progress Charts & History - See your strength trends over time and never lose past performance data.
+• Minimalist & Focused Design - A clean, intuitive interface that keeps you in the zone.
