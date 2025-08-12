@@ -36,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else if (!user.isEmailVerified) {
         emit(const AuthStateNeedsVerification(isLoading: false));
       } else {
-        emit(AuthStateLoggedIn(user: user, isLoading: false));
+        emit(AuthStateLoggedIn(user: user, isLoading: false, exception: null));
       }
     });
     //log in
@@ -50,7 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (!user.isEmailVerified) {
           emit(const AuthStateNeedsVerification(isLoading: false));
         } else {
-          emit(AuthStateLoggedIn(user: user, isLoading: false));
+          emit(
+            AuthStateLoggedIn(user: user, isLoading: false, exception: null),
+          );
         }
       } on Exception catch (e) {
         emit(AuthStateLoggedOut(exception: e, isLoading: false));
@@ -108,16 +110,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await provider.reloadUser();
       final user = provider.currentUser;
       if (user != null && user.isEmailVerified) {
-        emit(AuthStateLoggedIn(user: user, isLoading: false));
+        emit(AuthStateLoggedIn(user: user, isLoading: false, exception: null));
       }
     });
     //deleting user
     on<AuthEventDeleteUser>((event, emit) async {
+      final user = provider.currentUser;
+      if (user == null) {
+        return;
+      }
       try {
         await provider.deleteUser(password: event.password);
         emit(AuthStateLoggedOut(exception: null, isLoading: false));
-      } on Exception catch (e) {
-        emit(AuthStateLoggedOut(exception: e, isLoading: false));
+      } catch (e) {
+        emit(AuthStateLoggedIn(user: user, exception: e, isLoading: false));
       }
     });
   }

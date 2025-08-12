@@ -33,9 +33,7 @@ Future<String?> showDeleteUserOverlay(BuildContext context) async {
           TextButton(
             onPressed: () {
               final password = passwordController.text.trim();
-              if (password.isNotEmpty) {
-                Navigator.of(context).pop(password);
-              }
+              Navigator.of(context).pop(password);
             },
             child: const Text(
               'Confirm',
