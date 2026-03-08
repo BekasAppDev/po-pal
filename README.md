@@ -10,3 +10,11 @@ Track, analyze, and master your strength gains with PO Pal - the minimalist work
 • No restrictions - Add any exercise, create custom workouts, and train the way you want.
 • Progress Charts & History - See your strength trends over time and never lose past performance data.
 • Minimalist & Focused Design - A clean, intuitive interface that keeps you in the zone.
+
+![Login View](screenshots/screenshot_1.png)
+
+![Workouts View](screenshots/screenshot_2.png)
+
+![Exercises View](screenshots/screenshot_3.png)
+
+![Exercise Details View](screenshots/screenshot_4.png)
